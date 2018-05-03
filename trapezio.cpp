@@ -3,17 +3,15 @@
 #include <stdlib.h>
 #include <math.h>
 
-
-
 double funcao(double );
 double (*func) (double) = funcao; //Ponteiro para a função
-double trapezio(double , double , int , double (*func)(double)); //Método 1/3 simpson
+double trapezio(double , double , int , double (*func)(double)); //Método Trapézio
 
 int main()
 {
 	//Pre-definindo o numero de iteracoes e os intervalos,
 	//sem interacao com o usuario.
-	int n = 100000; // numero de sub intervalos (tem que ser par)
+	int n = 6; // numero de sub intervalos (tem que ser par)
 	double a = -5;
 	double b = 5;
 
@@ -50,13 +48,16 @@ double trapezio(double a, double b, int n, double (*func)(double))
 		vet_x[i] = vet_x[i-1] + width;
 		vet_y[i] = func(vet_x[i]);
 	}
+	
+	//ex: Regra do trapézio composta para 7 pontos: (aplicada 6 vezes)
+	//h[f(x0)/2 + f(x1) + f(x2) + f(x3) + f(x4) + f(x5) + f(x6)/2 ]
 
-	double result = vet_y[0];
+	double result = vet_y[0]/2 + vet_y[n]/2; //f(x0)/2 + f(xn)/2
 
-	for(int i = 1; i < n+1; ++i)
+	for(int i = 1; i < n; ++i) //Restante dos valores são somados
 	{
-		result = result + 2 * vet_y[i];
+		result = result + vet_y[i];
 	}
-	result = (h/2) * (result + vet_y[n+1]);
+	result = h * result;
 	return result;
 }
